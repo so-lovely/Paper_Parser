@@ -14,6 +14,7 @@ READMD.md
 experiment
 experiment *.ipynb
 pyproject.toml
+.env
 ```
 
 ## Change
