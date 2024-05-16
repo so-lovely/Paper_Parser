@@ -57,6 +57,15 @@ Going to next page, current_element should be cleared
 Default find function param -> one_param = False, filter = True, reset = False
 """
 
+"""
+OPEN:
+If reset with find function, what about history?
+"""
+
+"""
+Working on linkbot.py not linkbot_test.ipynb May 16 around 12 p.m
+"""
+
 # %%
 class Linkbot:
     def __init__(self, url):
@@ -116,31 +125,48 @@ class Linkbot:
                 return self.current_element
 
 
-    def filter_hrefs(self, index, string): # -> elements
+    def filter_hrefs(self, index:int, string): # -> elements
         filtered_elements = []
         for element in self.current_elements:
-            if string in str(list(Path(element.get_attribute('href')))[index]):
+            if len(Path(element.get_attribute('href')).parts) < index + 1:
+                pass
+            elif string in Path(element.get_attribute('href')).parts[index]:
                 self.current_element = element
                 filtered_elements.append(self.current_element)
                 self.processing_elements(fun_name='filter_hrefs', value=string, one_param=True)
             else:
                 pass
+        self.current_elements = filtered_elements
         return filtered_elements
 
 
     def get_ids(self, elements=None, one_param = False): 
         if elements is None:
             if one_param == True:
-                return self.current_element.id
+                return self.current_element.get_attribute('id')
             elif one_param == False:
-                return self.current_elements.id
+                elements_ids = []
+                for element in self.current_elements:
+                    elements_ids.append(element.get_attribute('id'))
+                return elements_ids
+            else:
+                assert False, 'Check get_ids - elements is None & one_param is not bool'
         else:
-            return elements.id
+            if one_param == True:
+                return elements.get_attribute('id')
+            elif one_param == False:
+                elements_ids = []
+                for element in elements:
+                    elements_ids.append(element.get_attribute('id'))
+                return elements_ids
+            else:
+                assert False, 'Check get_ids = elements is not None & one_param is not bool'
+            
                 
 
     def find_element_by_id(self,id): 
         self.current_element = self.driver.find_element(by=By.ID, value=id)
-        self.processing_elements(fun_name='find_element_by_id', value='id')
+        self.processing_elements(fun_name='find_element_by_id', value=id)
         return self.current_element
     
     
@@ -220,7 +246,7 @@ class Linkbot:
             function_name.append(None if function is None else hash(function))
         else:
             raise RuntimeError('if-else condition error at update_current_element_info')
-        self.pass_current_element = {'id': self.current_element.id,
+        self.pass_current_element = {'id': self.current_element.get_attribute('id'),
                           'tag': tag_name, 
                           'text': self.current_element.text,
                           'value': value_name, 
