@@ -92,30 +92,42 @@ class Linkbot:
         
 
     def find_elements_by_tag(self, tag:str, filter=True, one_param=False):
-        temp_fun_name:str = 'find_elements_by_tag_a'
+        temp_fun_name:str = 'find_elements_by_tag'
         self.current_url = self.driver.current_url
         if one_param == False:
             if filter == True:
                 filter_elements = []
                 for element in self.current_elements:
-                    self.current_element = element.find_element(by=By.TAG_NAME, value=tag)
+                    try:
+                        self.current_element = element.find_element(by=By.TAG_NAME, value=tag)
+                    except:
+                        pass
                     filter_elements.append(self.current_element)
                     self.processing_elements(fun_name=temp_fun_name, value=tag, one_param=True, tag=tag)
                 self.current_elements = filter_elements
                 return filter_elements
             elif filter == False:
-                self.current_elements = self.driver.find_elements(by=By.TAG_NAME, value=tag)
+                try:
+                    self.current_elements = self.driver.find_elements(by=By.TAG_NAME, value=tag)
+                except:
+                    pass
                 self.processing_elements(fun_name=temp_fun_name, value=tag, tag=tag)
                 return self.current_elements
             else:
                 raise RuntimeError(" ".join([temp_fun_name ,'error - filter is not bool']))
         elif one_param == True:
             if filter == True:
-                self.current_element = self.current_element.find_element(by=By.TAG_NAME, value=tag)
+                try:
+                    self.current_element = self.current_element.find_element(by=By.TAG_NAME, value=tag)
+                except:
+                    pass
                 self.processing_elements(fun_name=temp_fun_name, value=tag, one_param=True, tag=tag)
                 return self.current_element
             else:
-                self.current_element = self.driver.find_element(by=By.TAG_NAME, value=tag)
+                try:
+                    self.current_element = self.driver.find_element(by=By.TAG_NAME, value=tag)
+                except:
+                    pass
                 self.processing_elements(fun_name=temp_fun_name, value=tag, one_param=True, tag=tag)
                 return self.current_element
         else:
@@ -167,24 +179,36 @@ class Linkbot:
             if filter == True:
                 filter_elements = []
                 for element in self.current_elements:
-                    self.current_element = element.find_element(by=By.ID, value=id)
+                    try:
+                        self.current_element = element.find_element(by=By.ID, value=id)
+                    except:
+                        pass
                     filter_elements.append(self.current_element)
                     self.processing_elements(fun_name=temp_fun_name, value=id, one_param=True)
                 self.current_elements = filter_elements
                 return filter_elements
             elif filter == False:
-                self.current_elements = self.driver.find_elements(by=By.ID, value=id)
+                try:
+                    self.current_elements = self.driver.find_elements(by=By.ID, value=id)
+                except:
+                    pass
                 self.processing_elements(fun_name=temp_fun_name, value=id)
                 return self.current_elements
             else:
                 raise RuntimeError(" ".join([temp_fun_name ,'error - filter is not bool']))
         elif one_param == True:
             if filter == True:
-                self.current_element = self.current_element.find_element(by=By.ID, value=id)
+                try:
+                    self.current_element = self.current_element.find_element(by=By.ID, value=id)
+                except:
+                    pass
                 self.processing_elements(fun_name=temp_fun_name, value=id, one_param=True)
                 return self.current_element
             else:
-                self.current_element = self.driver.find_element(by=By.ID, value=id)
+                try:
+                    self.current_element = self.driver.find_element(by=By.ID, value=id)
+                except:
+                    pass
                 self.processing_elements(fun_name=temp_fun_name, value=id, one_param=True)
                 return self.current_element
         else:
@@ -205,24 +229,36 @@ class Linkbot:
             if filter == True:
                 filter_elements = []
                 for element in self.current_elements:
-                    self.current_element = element.find_element(by=By.LINK_TEXT, value=link_text)
+                    try:
+                        self.current_element = element.find_element(by=By.LINK_TEXT, value=link_text)
+                    except:
+                        pass
                     filter_elements.append(self.current_element)
                     self.processing_elements(fun_name=temp_fun_name, value=link_text, one_param=True)
                 self.current_elements = filter_elements
                 return filter_elements
             elif filter == False:
-                self.current_elements = self.driver.find_elements(by=By.LINK_TEXT, value=link_text)
+                try:
+                    self.current_elements = self.driver.find_elements(by=By.LINK_TEXT, value=link_text)
+                except:
+                    pass
                 self.processing_elements(fun_name=temp_fun_name, value=link_text)
                 return self.current_elements
             else:
                 raise RuntimeError(" ".join([temp_fun_name ,'error - filter is not bool']))
         elif one_param == True:
             if filter == True:
-                self.current_element = self.current_element.find_element(by=By.LINK_TEXT, value=link_text)
+                try:
+                    self.current_element = self.current_element.find_element(by=By.LINK_TEXT, value=link_text)
+                except:
+                    pass
                 self.processing_elements(fun_name=temp_fun_name, value=link_text, one_param=True)
                 return self.current_element
             else:
-                self.current_element = self.driver.find_element(by=By.LINK_TEXT, value=link_text)
+                try:
+                    self.current_element = self.driver.find_element(by=By.LINK_TEXT, value=link_text)
+                except:
+                    pass
                 self.processing_elements(fun_name=temp_fun_name, value=link_text, one_param=True)
                 return self.current_element
         else:
