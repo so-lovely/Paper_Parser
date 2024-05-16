@@ -21,7 +21,8 @@ past_data = {page1_url: {element1 : {tag:[tag1, tag2, tag3, tag4 ....], -> histo
                                  value:
                                  function: '  '
                                  ...
-                                 ]
+                                 }
+                                 }
                      ....
                      }
         page2_url: ....
@@ -87,9 +88,11 @@ class Linkbot:
         self.driver = webdriver.Chrome()
         self.driver.get(self.starturl)
         self.driver.implicitly_wait(2)
+        self.current_url = self.driver.current_url
         
 
     def find_elements_by_tag_a(self, reset=False, filter=True, one_param=False):
+        temp_fun_name:str = 'find_elements_by_tag_a'
         if one_param == False:
             if reset == False:
                 if filter == True:
@@ -97,31 +100,31 @@ class Linkbot:
                     for element in self.current_elements:
                         self.current_element = element.find_element(by=By.TAG_NAME, value='a')
                         filter_elements.append(self.current_element)
-                        self.processing_elements(fun_name='find_elements_by_tag_a', value='a', one_param=True)
+                        self.processing_elements(fun_name=temp_fun_name, value='a', one_param=True)
                     self.current_elements = filter_elements
                     return filter_elements
                 elif filter == False:
                     self.current_elements = self.driver.find_elements(by=By.TAG_NAME, value='a')
-                    self.processing_elements(fun_name='find_elements_by_tag_a', value='a')
+                    self.processing_elements(fun_name=temp_fun_name, value='a')
                     return self.current_elements
                 else:
-                    raise RuntimeError('find_elements_by_tag_a error - filter is not bool')
+                    raise RuntimeError(" ".join([temp_fun_name ,'error - filter is not bool']))
             elif reset == True:
                 self.current_elements = None
                 self.current_elements = self.current_elements.find_elements(by=By.TAG_NAME, value='a')
-                self.processing_elements(fun_name='find_elements_by_tag_a', value='a')
+                self.processing_elements(fun_name=temp_fun_name, value='a')
                 return self.current_elements
             else:
                 raise RuntimeError('find_elements_by_tag_a error - reset is not bool')
         else:
             if reset == False:
                 self.current_element = self.current_element.find_element(by=By.TAG_NAME, value='a')
-                self.processing_elements(fun_name='find_elments_by_tag_a', value='a', one_param=True)
+                self.processing_elements(fun_name=temp_fun_name, value='a', one_param=True)
                 return self.current_element
             elif reset == True:
                 self.current_element = None
                 self.current_element = self.current_element.find_element(by=By.TAG_NAME, value='a')
-                self.processing_elements(fun_name='find_elments_by_tag_a', value='a', one_param=True)
+                self.processing_elements(fun_name=temp_fun_name, value='a', one_param=True)
                 return self.current_element
 
 
@@ -217,7 +220,14 @@ class Linkbot:
         self.current_element.clear()
         self.current_elements.clear()
 
+
+    def forward(self):
+        self.driver.forward()
+        time.sleep(1)
+        self.current_url = self.driver.current_url
+        self.current_element_and_elements_clear()
     
+
     def back(self):
         self.driver.back()
         time.sleep(1)
@@ -237,9 +247,12 @@ class Linkbot:
             value_name.append(None if Value is None else Value)
             function_name.append(None if function is None else hash(function))
         elif self.current_element in self.past_data[self.current_url].keys():
-            tag_name:list = self.past_data[self.current_url][self.current_element]['tag'].append(self.current_element.tag_name)
-            value_name:list = self.past_data[self.current_url][self.current_element]['value'].append(None if Value is None else Value)
-            function_name:list = self.past_data[self.current_url][self.current_element]['function'].append(None if function is None else hash(function))
+            past_data_tag:list = self.past_data[self.current_url][self.current_element]['tag']
+            past_data_value:list = self.past_data[self.current_url][self.current_element]['value']
+            past_data_function:list = self.past_data[self.current_url][self.current_element]['function']
+            tag_name:list = past_data_tag.append(self.current_element.tag_name)
+            value_name:list = past_data_value.append(None if Value is None else Value)
+            function_name:list = past_data_function.append(None if function is None else hash(function))
         elif self.current_element:
             tag_name.append(self.current_element.tag_name)
             value_name.append(None if Value is None else Value)
@@ -256,19 +269,18 @@ class Linkbot:
         self.update_current_data_info(self.pass_current_element) 
         self.update_past_data_info(self.pass_current_element)
         self.is_update_current_element = False
-        return self.current_element_info
 
 
     def update_current_data_info(self, pass_element):
         if self.is_update_current_element == True:
-            self.current_data.update(pass_element)
+            self.current_data.update({self.current_element : pass_element})
         else:
             raise RuntimeError('update_current_data_info error')
 
 
     def update_past_data_info(self, pass_element):
         if self.is_update_current_element == True:
-            self.past_data.update({self.current_url : pass_element})
+            self.past_data.update({self.current_url : {self.current_element : pass_element}})
         else:
             raise RuntimeError('update_past_date_info error')
         
