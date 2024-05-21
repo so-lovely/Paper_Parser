@@ -1,0 +1,11 @@
+selenium
+dot-env
+pathlib
+os
+requests
+time
+sys
+asyncio
+beautifulsoup4
+pprint
+socket
