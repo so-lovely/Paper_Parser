@@ -4,3 +4,5 @@ pyvenv.cfg
 include/
 .env
 share/
+llama_index/
+.pytest_cache/
